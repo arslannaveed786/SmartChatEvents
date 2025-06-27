@@ -59,44 +59,47 @@ const EventChatScreen = ({ navigation, route }: any) => {
 
     return unsubscribe;
   }, [eventId]);
+const shouldAskAI = (text: string) => {
+  const triggers = ['what', 'who', 'where', 'how', 'when', 'why'];
+  const lower = text.toLowerCase();
+  return triggers.some(trigger => lower.startsWith(trigger));
+};
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+  if (!input.trim()) return;
 
-    const trimmed = input.trim();
-    setInput('');
+  const trimmed = input.trim();
+  setInput('');
 
-    if (trimmed.startsWith('/ask')) {
-      const prompt = trimmed.replace('/ask', '').trim();
-      try {
-        await functions().httpsCallable('askAssistant')({ prompt, eventId });
-      } catch (err) {
-        console.error('Assistant error:', err);
-        await firestore()
-          .collection('events')
-          .doc(eventId)
-          .collection('messages')
-          .add({
-            text: "I'm having trouble responding right now. Try again later.",
-            senderId: 'assistant',
-            displayName: 'Copilot',
-            createdAt: firestore.FieldValue.serverTimestamp(),
-          });
-      }
-      return;
+  if (shouldAskAI(trimmed)) {
+    try {
+      await functions().httpsCallable('askAssistant')({ prompt: trimmed, eventId });
+    } catch (err) {
+      console.error('AI error:', err);
+      await firestore()
+        .collection('events')
+        .doc(eventId)
+        .collection('messages')
+        .add({
+          text: "I'm having trouble responding right now. Try again later.",
+          senderId: 'assistant',
+          displayName: 'Copilot',
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
     }
-
+    return;
+  }
     await firestore()
-      .collection('events')
-      .doc(eventId)
-      .collection('messages')
-      .add({
-        text: trimmed,
-        senderId: currentUser?.uid,
-        displayName: currentUser?.displayName || 'Anonymous',
-        avatarUrl: '', // add avatar if needed
-        createdAt: firestore.FieldValue.serverTimestamp(),
-      });
+    .collection('events')
+    .doc(eventId)
+    .collection('messages')
+    .add({
+      text: trimmed,
+      senderId: currentUser?.uid,
+      displayName: currentUser?.displayName || 'Anonymous',
+      avatarUrl: '', // optional
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
   };
 
   const renderItem = ({ item }: { item: Message }) => {
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   sendButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: COLORS.blue,
     paddingHorizontal: 16,
     justifyContent: 'center',
     borderRadius: 20,
@@ -274,7 +277,7 @@ const styles = StyleSheet.create({
   },
   backText: {
     fontSize: 18,
-    color: COLORS.primary,
+    color: COLORS.blue,
   },
   headerTitle: {
     fontSize: 18,

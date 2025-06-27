@@ -11,14 +11,24 @@ import EventChatScreen from './src/screens/EventChatScreen';
 import { View, Text } from 'react-native';
 import COLORS from './src/constants/Colors';
 import { UserProvider } from './src/context/UserContext';
+import Config from 'react-native-config';
 
+
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyCTYAsQV5HxLup_LUJ84c_5Uek9TVr5uOM',
+//   authDomain: 'smartchatevents.firebaseapp.com',
+//   projectId: 'smartchatevents',
+//   storageBucket: 'smartchatevents.firebasestorage.app',
+//   messagingSenderId: '1059854561709',
+//   appId: '1:1059854561709:android:c737cf58a0f24e2c177124',
+// };
 const firebaseConfig = {
-  apiKey: 'AIzaSyCTYAsQV5HxLup_LUJ84c_5Uek9TVr5uOM',
-  authDomain: 'smartchatevents.firebaseapp.com',
-  projectId: 'smartchatevents',
-  storageBucket: 'smartchatevents.firebasestorage.app',
-  messagingSenderId: '1059854561709',
-  appId: '1:1059854561709:android:c737cf58a0f24e2c177124',
+  apiKey: Config.FIREBASE_API_KEY,
+  authDomain: Config.FIREBASE_AUTH_DOMAIN,
+  projectId: Config.FIREBASE_PROJECT_ID,
+  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
+  appId: Config.FIREBASE_APP_ID,
 };
 
 if (!firebase.apps.length) {

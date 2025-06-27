@@ -19,9 +19,9 @@ import Spacer from '../../components/Spacer';
 import { signUpWithEmail } from '../../firebase/firebaseAuth';
 
 const SignupScreen = ({ navigation }: { navigation: any }) => {
-  const [email, setEmail] = useState('test123@gmail.com');
-  const [password, setPassword] = useState('12345678');
-  const [displayName, setDisplayName] = useState('Test123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
