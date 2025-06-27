@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { signInWithEmail } from '../../firebase/firebaseAuth';
 import COLORS from '../../constants/Colors';
@@ -15,21 +16,30 @@ import AuthInput from '../../components/AuthInput';
 import IMAGES from '../../constants/Images';
 import { FONT_SIZE, FONT_WEIGHT } from '../../constants/Typography';
 import Spacer from '../../components/Spacer';
+import { useUser } from '../../context/UserContext';
+import auth from '@react-native-firebase/auth';
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
-  const [email, setEmail] = useState('test@gmail.com');
-  const [password, setPassword] = useState('12345678');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { setUser } = useUser();
 
   const handleLogin = async () => {
+    setLoading(true);
     const result = await signInWithEmail(email, password);
-    console.log('Sign In Result ===>', result.user?.uid);
-
-    // setMessage(result.error || 'Login successful!');
+    setLoading(false);
     if (result.error) {
       setMessage(result.error);
     } else {
-      setMessage('Log In successful!');
+      const firebaseUser = auth().currentUser;
+
+      setUser({
+        email: firebaseUser?.email || '',
+        uid: firebaseUser?.uid || '',
+        displayName: firebaseUser?.displayName || '',
+      });
       navigation.navigate('HomeScreen');
     }
   };
@@ -74,8 +84,16 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
       <View style={styles.bottomView}>
         <View />
         <Text style={styles.buttonText}>SIGN IN</Text>
-        <TouchableOpacity style={styles.buttonView} onPress={handleLogin}>
-          <Image source={IMAGES.ARROWRIGHT} />
+        <TouchableOpacity
+          style={styles.buttonView}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color={COLORS.white} />
+          ) : (
+            <Image source={IMAGES.ARROWRIGHT} />
+          )}
         </TouchableOpacity>
       </View>
       <View

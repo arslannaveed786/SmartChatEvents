@@ -35,7 +35,7 @@ const EventChatScreen = ({ navigation, route }: any) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false
+      headerShown: false,
     });
   }, [navigation]);
 
@@ -48,10 +48,13 @@ const EventChatScreen = ({ navigation, route }: any) => {
       .onSnapshot(snapshot => {
         const fetched = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         })) as Message[];
         setMessages(fetched);
-        setTimeout(() => flatListRef.current?.scrollToEnd({ animated: false }), 100);
+        setTimeout(
+          () => flatListRef.current?.scrollToEnd({ animated: false }),
+          100,
+        );
       });
 
     return unsubscribe;
@@ -127,6 +130,9 @@ const EventChatScreen = ({ navigation, route }: any) => {
               : styles.theirBubble,
           ]}
         >
+          {!isMe && item.displayName ? (
+            <Text style={styles.senderName}>{item.displayName}</Text>
+          ) : null}
           <Text style={styles.messageText}>{item.text}</Text>
           <Text style={styles.time}>
             {item.createdAt?.toDate?.().toLocaleTimeString([], {
@@ -146,7 +152,10 @@ const EventChatScreen = ({ navigation, route }: any) => {
     >
       {/* Custom header */}
       <View style={styles.customHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Text style={styles.backText}>◀</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1}>
@@ -265,13 +274,19 @@ const styles = StyleSheet.create({
   },
   backText: {
     fontSize: 18,
-    color: '#007AFF',
+    color: COLORS.primary,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
     flexShrink: 1,
+  },
+  senderName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#444',
+    marginBottom: 4,
   },
 });
 

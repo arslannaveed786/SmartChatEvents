@@ -19,8 +19,4 @@ export const FONT_WEIGHT = {
   DOUBLEBOLD: 900,
 } as const;
 export type FontWeight = (typeof FONT_WEIGHT)[keyof typeof FONT_WEIGHT];
-// export const FONT_FAMILY = {
-//   Inter: 'Inter',
-//   Outfit: 'Outfit',
-//   Poppins: 'Poppins',
-// };
+

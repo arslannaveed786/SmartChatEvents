@@ -6,6 +6,7 @@ const IMAGES = {
   SMS: require('../assets/icons/sms.png'),
   CALENDAR: require('../assets/icons/calendar.png'),
   LOCATION: require('../assets/icons/location.png'),
+  USER: require('../assets/icons/user.png'),
 
   //   IMAGES
   LOGO: require('../assets/images/logo.png'),

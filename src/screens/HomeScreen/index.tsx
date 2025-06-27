@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
             </View>
             <Spacer width={5} />
             <Text style={styles.meta}>
-              {item.scheduledFor?.toDate ? finalDate : 'No date'}
+              {item.scheduledFor ? finalDate : 'No date'}
             </Text>
           </View>
           <Spacer height={5} />
@@ -99,7 +99,11 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   if (loading)
     return (
-      <ActivityIndicator style={styles.loader} size="large" color="#007AFF" />
+      <ActivityIndicator
+        style={styles.loader}
+        size="large"
+        color={COLORS.primary}
+      />
     );
 
   return (
@@ -131,8 +135,6 @@ const styles = StyleSheet.create({
   loader: { flex: 1, justifyContent: 'center' },
   list: { padding: 16 },
   row: { flexDirection: 'row', alignItems: 'center' },
-  title: { fontSize: 18, fontWeight: 'bold', color: '#222' },
-  sub: { fontSize: 14, color: '#555', marginTop: 4 },
   card: {
     backgroundColor: COLORS.white,
     borderRadius: 12,
@@ -148,15 +150,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   eventTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#222',
+    fontSize: FONT_SIZE.LARGE,
+    fontWeight: FONT_WEIGHT.BOLD,
+    color: COLORS.black,
     marginBottom: 6,
   },
   meta: {
     fontSize: FONT_SIZE.MEDIUM,
-    color: '#666',
-    // marginBottom: 4,
+    color: COLORS.gray_black,
   },
   chatButton: {
     marginTop: 10,
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     margin: 16,
     borderRadius: 10,
-    fontSize: 16,
+    fontSize: FONT_SIZE.MEDIUM,
     borderWidth: 1,
     borderColor: COLORS.font_white,
   },

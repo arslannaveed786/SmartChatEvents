@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 // import { signInWithEmail } from '../../firebase/firebaseAuth';
 import COLORS from '../../constants/Colors';
@@ -18,18 +19,25 @@ import Spacer from '../../components/Spacer';
 import { signUpWithEmail } from '../../firebase/firebaseAuth';
 
 const SignupScreen = ({ navigation }: { navigation: any }) => {
-  const [email, setEmail] = useState('test@gmail.com');
+  const [email, setEmail] = useState('test123@gmail.com');
   const [password, setPassword] = useState('12345678');
+  const [displayName, setDisplayName] = useState('Test123');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
+    setLoading(true);
     const result = await signUpWithEmail(email, password);
-    console.log('SignUp result ===>', result.user?.uid);
+    setLoading(false);
 
     if (result.error) {
       setMessage(result.error);
     } else {
-      setMessage('Sign In successful!');
+      const user = result.user;
+      if (user && displayName) {
+        await user.updateProfile({ displayName });
+      }
+      setMessage('Sign Up successful!');
       navigation.navigate('LoginScreen');
     }
   };
@@ -55,6 +63,13 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
       <Text style={styles.signInText}>Sign Up</Text>
       <Spacer height={10} />
       <AuthInput
+        placeholder="Put your name"
+        value={displayName}
+        onChangeText={setDisplayName}
+        imageSource={IMAGES.USER}
+      />
+      <Spacer height={12} />
+      <AuthInput
         placeholder="Put your email"
         keyboardType="email-address"
         autoCapitalize="none"
@@ -74,8 +89,16 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
       <View style={styles.bottomView}>
         <View />
         <Text style={styles.buttonText}>SIGN UP</Text>
-        <TouchableOpacity style={styles.buttonView} onPress={handleSignup}>
-          <Image source={IMAGES.ARROWRIGHT} />
+        <TouchableOpacity
+          style={styles.buttonView}
+          onPress={handleSignup}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color={COLORS.white} />
+          ) : (
+            <Image source={IMAGES.ARROWRIGHT} />
+          )}
         </TouchableOpacity>
       </View>
       <View
